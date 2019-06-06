@@ -1,0 +1,16 @@
+bag1,bag2
+8,7
+周俊彦,bag2,bag1
+熊永春,bag2,bag1
+王雪晨,bag2,bag1
+王淦,bag2,bag1
+徐月华,bag2,bag1
+陈科有,bag2,bag1
+王志尚,bag2,bag1
+陆先柱,bag2,bag1
+罗勇闯,bag1,bag2
+张娟,bag1,bag2
+林帅,bag1,bag2
+李素华,bag1,bag2
+李俊锋,bag1,bag2
+
