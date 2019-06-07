@@ -25,10 +25,10 @@ public class Candidate {
     private boolean giveUp = false;
 
 
-    public Candidate(String name, Gift... gifts) {
+    public Candidate(String name, Gift... wishes) {
         this.name = name;
-        this.wishes = IntStream.range(0, wishes.size())
-                              .mapToObj(i -> new Wish(gifts[i], i + 1, this))
+        this.wishes = IntStream.range(0, wishes.length)
+                              .mapToObj(i -> new Wish(wishes[i], i + 1, this))
                               .collect(toList());
     }
 
@@ -39,9 +39,6 @@ public class Candidate {
     }
 
     public Candidate(String name, List<Gift> wishes) {
-        this.name = name;
-        this.wishes = IntStream.range(0, wishes.size())
-                               .mapToObj(i -> new Wish(wishes.get(i), i + 1, this))
-                               .collect(toList());
+        this(name,wishes.toArray(new Gift[wishes.size()]));
     }
 }

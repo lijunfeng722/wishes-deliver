@@ -3,10 +3,9 @@ package com.ljf.wishesdeliver.service;
 import com.ljf.wishesdeliver.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.TreeMap;
+import java.io.*;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static com.ljf.wishesdeliver.domain.DeliveryResult.NO_GIFT;
 import static com.ljf.wishesdeliver.domain.DeliveryResult.OUT_OF_WILLING;
@@ -88,6 +87,8 @@ public class DeliverService {
 
 
     }
+
+
 
     private List<Candidate> someDoesNotHasGift(List<Candidate> candidates, List<DeliveryResult> results) {
         return candidates.stream()

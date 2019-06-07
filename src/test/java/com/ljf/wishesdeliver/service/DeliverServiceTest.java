@@ -1,6 +1,8 @@
 package com.ljf.wishesdeliver.service;
 
+import com.ljf.wishesdeliver.DeliverController;
 import com.ljf.wishesdeliver.domain.*;
+import com.ljf.wishesdeliver.util.DataAccessUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,52 +57,25 @@ public class DeliverServiceTest {
 
     @Autowired
     DeliverService deliverService;
+    @Autowired
+    DeliverController deliverController;
+
+    private static final String dataFileName = "data.txt";
+    private static final String resultFileName = "result.txt";
 
     @Test
-    public void deliverWish() {
+    public void deliverWish_DataFromFile() {
+        List<Candidate> candidates = new ArrayList<>();
+        List<Stock<Gift>> stocks = new ArrayList<>();
+        DataAccessUtil.loadDateFromFile(candidates, stocks, dataFileName);
+        DeliveryReport deliveryReport = deliverService.deliverWish(stocks, candidates);
+        DataAccessUtil.saveReport2File(deliveryReport,resultFileName);
+    }
 
+    @Test
+    public void deliverWish_dataFromCode() {
         DeliveryReport deliveryReport = deliverService.deliverWish(stocks, candidates);
         System.out.println(deliveryReport);
     }
 
-    @Test
-    public void deliverWish_GET_INPUT_FROM_FILE() {
-        List<Candidate> candidates1 = new ArrayList<>();
-        try (BufferedReader inputStream = new BufferedReader(new FileReader("data.txt"))) {
-            // 读取礼物列表
-            String line = inputStream.readLine();
-            List<String> giftName = Arrays.asList(line.split(","));
-            List<Gift> gifts = giftName.stream().map(Gift::new).collect(toList());
-            // 读取礼物库存
-            line = inputStream.readLine();
-            List<String> stockStr = Arrays.asList(line.split(","));
-            List<Stock<Gift>> stocks = IntStream.range(0, gifts.size())
-                                                .mapToObj(i -> new Stock<Gift>(gifts.get(i), Integer.parseInt(stockStr.get(i))))
-                                                .collect(toList());
-
-            //获取candidates以及志愿
-            while ((line = inputStream.readLine()) != null) {
-                List<String> strings = Arrays.asList(line.split(","));
-                String candidateName = strings.get(0);
-                // 是否填写了志愿
-                if (strings.size() > 1) {
-                    List<Gift> wishes = strings.subList(1, strings.size()).stream().map(giftNameStr -> {
-                        Gift gift = new Gift(giftNameStr);
-                        if (!gifts.contains(gift))
-                            throw new RuntimeException(candidateName + " 的愿望：" + gift.getName() + " 未出现在先前输入的愿望清单中" + giftName + "。");
-                        return gift;
-                    }).collect(toList());
-                    candidates1.add(new Candidate(candidateName, wishes));
-                } else {
-                    candidates1.add(new Candidate(candidateName, true));
-                }
-
-            }
-            DeliveryReport deliveryReport = deliverService.deliverWish(stocks, candidates1);
-            System.out.println(deliveryReport);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 }
